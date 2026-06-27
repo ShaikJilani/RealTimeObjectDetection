@@ -1,5 +1,6 @@
 venv/
 __pycache__/
 *.pyc
-.yolo/
+.yolov8/
 runs/
+*.pt

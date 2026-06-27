@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-Time Object Detection</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f8fb;
+            text-align: center;
+        }
+
+        header {
+            background: #0b1f3a;
+            color: white;
+            padding: 20px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .container {
+            margin-top: 40px;
+        }
+
+        button {
+            background: #0b1f3a;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #123b6d;
+        }
+
+        #cameraBox {
+            margin-top: 30px;
+            display: none;
+        }
+
+        img {
+            width: 80%;
+            max-width: 1000px;
+            border-radius: 12px;
+            border: 4px solid #0b1f3a;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    YOLOv8 Real-Time Object Detection
+</header>
+
+<div class="container">
+    <h2>Click the button to access camera</h2>
+
+    <button onclick="startCamera()">Start Object Detection</button>
+
+    <div id="cameraBox">
+        <img id="videoFeed">
+    </div>
+</div>
+
+<script>
+    function startCamera() {
+        document.getElementById("cameraBox").style.display = "block";
+        document.getElementById("videoFeed").src = "/video";
+    }
+</script>
+
+</body>
+</html>

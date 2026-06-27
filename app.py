@@ -1,25 +1,47 @@
+from flask import Flask, render_template, Response
 import cv2
 from ultralytics import YOLO
 
+app = Flask(__name__)
+
 model = YOLO("yolov8n.pt")
+camera = None
 
-cap = cv2.VideoCapture(0)
 
-while True:
-    ret, frame = cap.read()
+def generate_frames():
+    global camera
+    camera = cv2.VideoCapture(0)
 
-    if not ret:
-        print("Camera not found")
-        break
+    while True:
+        success, frame = camera.read()
 
-    results = model(frame)
+        if not success:
+            break
 
-    annotated_frame = results[0].plot()
+        results = model(frame, verbose=False)
+        annotated_frame = results[0].plot()
 
-    cv2.imshow("YOLOv8 Real-Time Object Detection", annotated_frame)
+        ret, buffer = cv2.imencode(".jpg", annotated_frame)
+        frame = buffer.tobytes()
 
-    if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
+        yield (
+            b"--frame\r\n"
+            b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n"
+        )
 
-cap.release()
-cv2.destroyAllWindows()
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
+@app.route("/video")
+def video():
+    return Response(
+        generate_frames(),
+        mimetype="multipart/x-mixed-replace; boundary=frame"
+    )
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
